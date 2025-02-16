@@ -73,32 +73,53 @@ namespace cptc_unit_testing_in_vs.Models.Tests
         [TestMethod()]
         public void Withdraw_PositiveAmt_ReturnsCorrectBalance()
         {
-            Assert.Fail();
+            // Arrange
+            // Act
+            decimal returnedBalance = ba.Withdraw(5.77m);
+            // Assert
+            Assert.AreEqual(ba.Balance, returnedBalance);
         }
 
         [TestMethod()]
-        public void Withdraw_NegativeAmt_ThrowsArgumentException()
+        public void Withdraw_NegativeAmt_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Fail();
+           Assert.ThrowsException<ArgumentOutOfRangeException>(() => ba.Withdraw(-1));
         }
 
         [TestMethod()]
         public void Withdraw_Overdraft_ThrowsInvalidOperationException()
         {
-            Assert.Fail();
+
+            Assert.AreEqual(11.99m, ba.Balance); // Assuming the balance is 11.99m
+
+            Assert.ThrowsException<InvalidOperationException>(() => ba.Withdraw(100));
         }
 
         [TestMethod()]
-        public void Balance_SetFromOutside_ThrowsException()
+        public void Balance_IsPrivateField_WouldThrowException()
         {
-            Assert.Fail();
+            // Arrange
+            var balanceProperty = typeof(BankAccount).GetProperty("Balance");
+
+            // Act
+            var setter = balanceProperty?.GetSetMethod(true);
+
+            // Assert
+            Assert.IsTrue(setter == null || setter.IsPrivate, "The Balance setter is not private.");
         }
 
 
         [TestMethod()]
         public void Owner_SetFromOutside_ThrowsException()
         {
-            Assert.Fail();
+            // Arrange
+            var OwnerProperty = typeof(BankAccount).GetProperty("Owner");
+
+            // Act
+            var setter = OwnerProperty?.GetSetMethod(true);
+
+            // Assert
+            Assert.IsTrue(setter == null || setter.IsPrivate, "The Owner setter is not private.");
         }
 
    

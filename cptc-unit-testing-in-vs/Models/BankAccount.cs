@@ -25,9 +25,21 @@ namespace cptc_unit_testing_in_vs.Models
             Balance += amount;
             return Balance;
         }
-        public void Withdraw(decimal amount)
+        public decimal Withdraw(decimal amount)
         {
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "Amount of withdrawal must be positive");
+            }
+
+            // overdraft protection
+            if (Balance < amount)
+            {
+                throw new InvalidOperationException("Not sufficient funds for this withdrawal");
+            }
+
             Balance -= amount;
+            return Balance;
         }
     }
 }
