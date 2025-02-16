@@ -15,9 +15,15 @@ namespace cptc_unit_testing_in_vs.Models
             Owner = owner;
             Balance = balance;
         }
-        public void Deposit(decimal amount)
+        public decimal Deposit(decimal amount)
         {
+            if(amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "Amount of deposit must be positive");
+            }
+
             Balance += amount;
+            return Balance;
         }
         public void Withdraw(decimal amount)
         {

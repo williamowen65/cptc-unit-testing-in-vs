@@ -5,22 +5,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Principal;
 
 namespace cptc_unit_testing_in_vs.Models.Tests
 {
     [TestClass()]
     public class BankAccountTests
     {
-        [TestMethod()]
-        public void Deposit_PositiveAmt_ReturnsCorrectBalance()
+
+        private BankAccount ba; // Global variable
+
+        [TestInitialize]
+        public void CreateDefaultAccount() // needs to be public, not private
         {
-            Assert.Fail();
+            // Arrange
+            ba = new BankAccount("Mr. Bryan Walton", 11.99m);
+        }
+
+
+        [TestMethod()]
+        [DataRow(5.77)]
+        [DataRow(0.73)]
+        [DataRow(23.47)]
+        [DataRow(6.57)]
+        public void Deposit_PositiveAmt_ReturnsCorrectBalance(double data) {
+
+            // Arrange
+            decimal currentBalance = ba.Balance;
+
+            // Act
+           decimal returnedBalance = ba.Deposit((decimal)data);
+
+            // Assert
+            //Assert.AreEqual(currentBalance  + (decimal)data, ba.Balance);
+            Assert.AreEqual(returnedBalance, ba.Balance);
         }
 
         [TestMethod()]
-        public void Deposit_NegativeAmt_ThrowsArgumentException()
+        [DataRow(5.77)]
+        [DataRow(0.73)]
+        [DataRow(23.47)]
+        [DataRow(6.57)]
+        public void Deposit_PositiveAmt_ActuallyUpdatesTheInternalBalance(double data)
         {
-            Assert.Fail();
+
+            // Arrange
+            decimal currentBalance = ba.Balance;
+
+            // Act
+            ba.Deposit((decimal)data);
+
+            // Assert
+            Assert.AreEqual(currentBalance  + (decimal)data, ba.Balance);
+        }
+
+
+
+
+        [TestMethod()]
+        public void Deposit_NegativeAmt_ThrowsArgumentOutOfRangeException()
+        {
+            // Arrange
+            // Assert => Act
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ba.Deposit(-1));
         }
 
         [TestMethod()]
